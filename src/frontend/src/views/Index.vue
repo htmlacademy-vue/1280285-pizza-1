@@ -8,7 +8,12 @@
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
             <div class="sheet__content dough">
-              <label v-for="dough of doughArray" :key="dough" class="dough__input" :class="`dough__input--${dough.size}`">
+              <label
+                v-for="dough of doughArray"
+                :key="dough.id"
+                class="dough__input"
+                :class="`dough__input--${dough.size}`"
+              >
                 <input
                   type="radio"
                   name="dought"
@@ -16,8 +21,8 @@
                   class="visually-hidden"
                   checked
                 />
-                <b>{{dough.name}}</b>
-                <span>{{dough.description}}</span>
+                <b>{{ dough.name }}</b>
+                <span>{{ dough.description }}</span>
               </label>
             </div>
           </div>
@@ -28,14 +33,19 @@
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
             <div class="sheet__content diameter">
-              <label v-for="size of sizeArray" :key="size" class="diameter__input diameter__input--small" :class="`diameter__input--${size.diametr}`">
+              <label
+                v-for="size of sizeArray"
+                :key="size.id"
+                class="diameter__input diameter__input--small"
+                :class="`diameter__input--${size.slug}`"
+              >
                 <input
                   type="radio"
                   name="diameter"
                   value="small"
                   class="visually-hidden"
                 />
-                <span>{{size.name}}</span>
+                <span>{{ size.name }}</span>
               </label>
             </div>
           </div>
@@ -51,19 +61,30 @@
               <div class="ingredients__sauce">
                 <p>Основной соус:</p>
 
-                <label v-for="sauce of sauceArray" :key="sauce" class="radio ingredients__input">
+                <label
+                  v-for="sauce of sauceArray"
+                  :key="sauce.id"
+                  class="radio ingredients__input"
+                >
                   <input type="radio" name="sauce" value="tomato" checked />
-                  <span>{{sauce.name}}</span>
+                  <span>{{ sauce.name }}</span>
                 </label>
-
               </div>
 
               <div class="ingredients__filling">
                 <p>Начинка:</p>
 
                 <ul class="ingredients__list">
-                  <li v-for="ingredient of ingredientsArray" :key="ingredient" class="ingredients__item">
-                    <span class="filling" :class="`filling--${ingredient.slug}`">{{ingredient.name}}</span>
+                  <li
+                    v-for="ingredient of ingredientsArray"
+                    :key="ingredient.id"
+                    class="ingredients__item"
+                  >
+                    <span
+                      class="filling"
+                      :class="`filling--${ingredient.class}`"
+                      >{{ ingredient.name }}</span
+                    >
 
                     <div class="counter counter--orange ingredients__counter">
                       <button
@@ -87,7 +108,6 @@
                       </button>
                     </div>
                   </li>
-
                 </ul>
               </div>
             </div>
@@ -135,17 +155,52 @@ export default {
   },
   computed: {
     doughArray() {
-      return this.Ingredients.dough;
+      let dough = this.Ingredients.dough;
+      for (let i = 0; i < dough.length; i++) {
+        if (dough[i].name == "Тонкое") {
+          dough[i]["size"] = "light";
+        } else if (dough[i].name == "Толстое") {
+          dough[i]["size"] = "large";
+        }
+      }
+      return dough;
     },
     sizeArray() {
-      return this.Ingredients.sizes;
+      let size = this.Ingredients.sizes;
+      for (let i = 0; i < size.length; i++) {
+        if (size[i].name == "23 см") {
+          size[i]["slug"] = "small";
+        } else if (size[i].name == "32 см") {
+          size[i]["slug"] = "normal";
+        } else if (size[i].name == "45 см") {
+          size[i]["slug"] = "big";
+        }
+      }
+      return size;
     },
     sauceArray() {
-      return this.Ingredients.sauces
+      let sauce = this.Ingredients.sauces;
+      for (let i = 0; i < sauce.length; i++) {
+        if (sauce[i].name == "Томатный") {
+          sauce[i]["value"] = "tomato";
+        } else if (sauce[i].name == "Сливолчный") {
+          sauce[i]["value"] = "creamy";
+        }
+      }
+      return sauce;
     },
     ingredientsArray() {
-      return this.Ingredients.ingredients
-    }
+      let ingredient = this.Ingredients.ingredients;
+      for (let i = 0; i < ingredient.length; i++) {
+        let str = ingredient[i].image;
+        let res = decodeURI(
+          str.substring(str.lastIndexOf("/") + 1, str.length)
+        );
+        let resNew = res.substring(0, res.length - 4);
+        ingredient[i]["class"] = resNew;
+      }
+      return ingredient;
+    },
   },
 };
 </script>
