@@ -36,7 +36,7 @@
               <label
                 v-for="size of sizeArray"
                 :key="size.id"
-                class="diameter__input diameter__input--small"
+                class="diameter__input"
                 :class="`diameter__input--${size.slug}`"
               >
                 <input
