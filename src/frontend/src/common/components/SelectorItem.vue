@@ -38,7 +38,7 @@
 <script>
 export default {
   name: "SelectorItem",
-  props: ["name", "className", "price", "ingredientId", "checkDragEnter"],
+  props: ["name", "className", "ingredientId", "checkDragEnter"],
   data() {
     return {
       maxCount: 3,
@@ -50,8 +50,7 @@ export default {
     count: function (val, oldVal) {
       if (val > this.maxCount) this.count = this.maxCount;
       if (val !== oldVal) {
-        let priceIng = this.price * this.count;
-        this.$emit("changeIng", val, this.className, priceIng);
+        this.$emit("changeIng",  { className: this.className, count: val });
       }
     },
   },

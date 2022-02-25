@@ -32,21 +32,16 @@
         </div>
       </div>
     </div>
-    <BuilderPrice
-      :calcPrice="calcPrice"
-      :pizzaName="pizzaName"
-      :ingObj="ingObj"
-      @pushToCart="pushToCart"
-    />
+    <ItemCounter :calcPrice="calcPrice" :pizzaName="pizzaName" :ingObj="ingObj" @pushToCart="pushToCart"/>
   </div>
 </template>
 
 <script>
-import BuilderPrice from "@/modules/builder/components/BuilderPriceCounter";
+import ItemCounter from "@/common/components/ItemCounter";
 export default {
   name: "BuilderPizza",
   components: {
-    BuilderPrice,
+    ItemCounter,
   },
   data() {
     return {

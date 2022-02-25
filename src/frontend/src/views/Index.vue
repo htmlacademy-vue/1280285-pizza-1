@@ -69,7 +69,7 @@ export default {
       doughPrice: 0,
       sizeMult: 0,
       ingPrice: 0,
-      checkDragEnter: false
+      checkDragEnter: false,
     };
   },
   computed: {
@@ -110,24 +110,34 @@ export default {
         this.saucePrice = price;
       }
     },
-    changeIng(value, className, price) {
-      //console.log(value, className, price)
-      this.ingPrice = price;
-      this.ingObj[className] = value;
-      this.ingObj = { ...this.ingObj };
+    changeIng(object) {
+      let price = 0;
+      this.ingObj[object.className] = object.count;
+
+      for (let i in this.ingObj) {
+        const ingredientItem = Ingredients.ingredients.find(item => item.class == i);
+        let ingredientPrice = ingredientItem.price * this.ingObj[i];
+        price += ingredientPrice;
+      }
+      
+      console.log(this.ingObj, price)
+      this.ingPrice = price
     },
     pushToCart(finalPrice) {
       this.$emit("pushToCart", finalPrice);
     },
     dragenter(check) {
-      this.checkDragEnter = check
+      this.checkDragEnter = check;
     },
-    dragenterCheck(event){
-      if(event.target.className !== "content__constructor" && !document.querySelector('.content__constructor').contains(event.target)){
-        this.checkDragEnter = false;       
+    dragenterCheck(event) {
+      if (
+        event.target.className !== "content__constructor" &&
+        !document.querySelector(".content__constructor").contains(event.target)
+      ) {
+        this.checkDragEnter = false;
         //console.log('dragenter', this.checkDragEnter, event.target.className)
       }
-    }
+    },
   },
 };
 </script>

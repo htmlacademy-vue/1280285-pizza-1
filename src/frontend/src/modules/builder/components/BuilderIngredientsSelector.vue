@@ -85,8 +85,8 @@ export default {
       );
       // console.log(value)
     },
-    changeIng(value, className, price) {
-      this.$emit("changeIng", value, className, price);
+    changeIng(object) {
+      this.$emit("changeIng", { ...object });
     },
   },
 };
