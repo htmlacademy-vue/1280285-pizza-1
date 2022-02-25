@@ -1,8 +1,8 @@
 <template>
   <div class="app-layout">
-    <AppLayoutHeader />
+    <AppLayoutHeader :finalPriceHeader="finalPriceHeader"/>
     <div class="content">
-      <Index />
+      <Index @pushToCart="pushToCart"/>
     </div>
   </div>
 </template>
@@ -14,9 +14,19 @@ import Index from "@/views/Index";
 
 export default {
   name: "AppLayout",
+  data() {
+    return {
+      finalPriceHeader: 0
+    }
+  },
   components: {
     AppLayoutHeader,
     Index,
   },
+  methods: {
+    pushToCart(finalPrice) {
+      this.finalPriceHeader = finalPrice
+    }
+  }
 };
 </script>

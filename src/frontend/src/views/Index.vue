@@ -1,30 +1,12 @@
 <template>
-  <main class="content">
+  <main class="content" @dragenter="dragenterCheck">
     <form action="#" method="post">
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
         <div class="content__dough">
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
-
-            <div class="sheet__content dough">
-              <label
-                v-for="dough of doughArray"
-                :key="dough.id"
-                class="dough__input"
-                :class="`dough__input--${dough.size}`"
-              >
-                <input
-                  type="radio"
-                  name="dought"
-                  value="light"
-                  class="visually-hidden"
-                  checked
-                />
-                <b>{{ dough.name }}</b>
-                <span>{{ dough.description }}</span>
-              </label>
-            </div>
+            <BuilderDough :list="Ingredients" @getValueRadio="getValueRadio" />
           </div>
         </div>
 
@@ -32,22 +14,7 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
-            <div class="sheet__content diameter">
-              <label
-                v-for="size of sizeArray"
-                :key="size.id"
-                class="diameter__input"
-                :class="`diameter__input--${size.slug}`"
-              >
-                <input
-                  type="radio"
-                  name="diameter"
-                  value="small"
-                  class="visually-hidden"
-                />
-                <span>{{ size.name }}</span>
-              </label>
-            </div>
+            <BuilderSize :list="Ingredients" @getValueRadio="getValueRadio" />
           </div>
         </div>
 
@@ -56,89 +23,21 @@
             <h2 class="title title--small sheet__title">
               Выберите ингредиенты
             </h2>
-
-            <div class="sheet__content ingredients">
-              <div class="ingredients__sauce">
-                <p>Основной соус:</p>
-
-                <label
-                  v-for="sauce of sauceArray"
-                  :key="sauce.id"
-                  class="radio ingredients__input"
-                >
-                  <input type="radio" name="sauce" value="tomato" checked />
-                  <span>{{ sauce.name }}</span>
-                </label>
-              </div>
-
-              <div class="ingredients__filling">
-                <p>Начинка:</p>
-
-                <ul class="ingredients__list">
-                  <li
-                    v-for="ingredient of ingredientsArray"
-                    :key="ingredient.id"
-                    class="ingredients__item"
-                  >
-                    <span
-                      class="filling"
-                      :class="`filling--${ingredient.class}`"
-                      >{{ ingredient.name }}</span
-                    >
-
-                    <div class="counter counter--orange ingredients__counter">
-                      <button
-                        type="button"
-                        class="counter__button counter__button--minus"
-                        disabled
-                      >
-                        <span class="visually-hidden">Меньше</span>
-                      </button>
-                      <input
-                        type="text"
-                        name="counter"
-                        class="counter__input"
-                        value="0"
-                      />
-                      <button
-                        type="button"
-                        class="counter__button counter__button--plus"
-                      >
-                        <span class="visually-hidden">Больше</span>
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="content__pizza">
-          <label class="input">
-            <span class="visually-hidden">Название пиццы</span>
-            <input
-              type="text"
-              name="pizza_name"
-              placeholder="Введите название пиццы"
+            <BuilderIngredients
+              :list="Ingredients"
+              @getValueRadio="getValueRadio"
+              @changeIng="changeIng"
+              :checkDragEnter="checkDragEnter"
             />
-          </label>
-
-          <div class="content__constructor">
-            <div class="pizza pizza--foundation--big-tomato">
-              <div class="pizza__wrapper">
-                <div class="pizza__filling pizza__filling--ananas"></div>
-                <div class="pizza__filling pizza__filling--bacon"></div>
-                <div class="pizza__filling pizza__filling--cheddar"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content__result">
-            <p>Итого: 0 ₽</p>
-            <button type="button" class="button" disabled>Готовьте!</button>
           </div>
         </div>
+        <BuilderPizza
+          :ingObj="ingObj"
+          :pizzaClasses="pizzaClasses"
+          :calcPrice="calcPrice"
+          @pushToCart="pushToCart"
+          @dragenter="dragenter"
+        />
       </div>
     </form>
   </main>
@@ -146,61 +45,89 @@
 
 <script>
 import Ingredients from "@/static/pizza.json";
+import BuilderDough from "@/modules/builder/components/BuilderDoughSelector";
+import BuilderSize from "@/modules/builder/components/BuilderSizeSelector";
+import BuilderIngredients from "@/modules/builder/components/BuilderIngredientsSelector";
+import BuilderPizza from "@/modules/builder/components/BuilderPizzaView";
 export default {
   name: "Index",
+  components: {
+    BuilderDough,
+    BuilderSize,
+    BuilderIngredients,
+    BuilderPizza,
+  },
   data() {
     return {
       Ingredients,
+      ingObj: {},
+      pizzaObj: {},
+      sauce: "",
+      dough: "",
+      size: "",
+      saucePrice: 0,
+      doughPrice: 0,
+      sizeMult: 0,
+      ingPrice: 0,
+      checkDragEnter: false
     };
   },
   computed: {
-    doughArray() {
-      let dough = this.Ingredients.dough;
-      for (let i = 0; i < dough.length; i++) {
-        if (dough[i].name == "Тонкое") {
-          dough[i]["size"] = "light";
-        } else if (dough[i].name == "Толстое") {
-          dough[i]["size"] = "large";
-        }
+    pizzaClasses() {
+      let classForPizza = "";
+      if (this.sauce == "tomato" && this.dough == "large") {
+        classForPizza = "pizza--foundation--big-tomato";
       }
-      return dough;
-    },
-    sizeArray() {
-      let size = this.Ingredients.sizes;
-      for (let i = 0; i < size.length; i++) {
-        if (size[i].name == "23 см") {
-          size[i]["slug"] = "small";
-        } else if (size[i].name == "32 см") {
-          size[i]["slug"] = "normal";
-        } else if (size[i].name == "45 см") {
-          size[i]["slug"] = "big";
-        }
+      if (this.sauce == "tomato" && this.dough == "light") {
+        classForPizza = "pizza--foundation--small-tomato";
       }
-      return size;
-    },
-    sauceArray() {
-      let sauce = this.Ingredients.sauces;
-      for (let i = 0; i < sauce.length; i++) {
-        if (sauce[i].name == "Томатный") {
-          sauce[i]["value"] = "tomato";
-        } else if (sauce[i].name == "Сливолчный") {
-          sauce[i]["value"] = "creamy";
-        }
+      if (this.sauce == "creamy" && this.dough == "large") {
+        classForPizza = "pizza--foundation--big-creamy";
       }
-      return sauce;
-    },
-    ingredientsArray() {
-      let ingredient = this.Ingredients.ingredients;
-      for (let i = 0; i < ingredient.length; i++) {
-        let str = ingredient[i].image;
-        let res = decodeURI(
-          str.substring(str.lastIndexOf("/") + 1, str.length)
-        );
-        let resNew = res.substring(0, res.length - 4);
-        ingredient[i]["class"] = resNew;
+      if (this.sauce == "creamy" && this.dough == "light") {
+        classForPizza = "pizza--foundation--small-creamy";
       }
-      return ingredient;
+
+      return classForPizza;
     },
+    calcPrice() {
+      let fullPrice =
+        (this.ingPrice + this.saucePrice + this.doughPrice) * this.sizeMult;
+      return fullPrice;
+    },
+  },
+  methods: {
+    getValueRadio(value, price, multiplier) {
+      console.log(price, multiplier);
+      if (value == "light" || value == "large") {
+        this.dough = value;
+        this.doughPrice = price;
+      } else if (value == "small" || value == "normal" || value == "big") {
+        this.size = value;
+        this.sizeMult = multiplier;
+      } else if (value == "creamy" || value == "tomato") {
+        this.sauce = value;
+        this.saucePrice = price;
+      }
+    },
+    changeIng(value, className, price) {
+      //console.log(value, className, price)
+      this.ingPrice = price;
+      this.ingObj[className] = value;
+      this.ingObj = { ...this.ingObj };
+    },
+    pushToCart(finalPrice) {
+      this.$emit("pushToCart", finalPrice);
+    },
+    dragenter(check) {
+      this.checkDragEnter = check
+    },
+    dragenterCheck(event){
+      if(event.target.className !== "content__constructor" && !document.querySelector('.content__constructor').contains(event.target)){
+        this.checkDragEnter = false;       
+        //console.log('dragenter', this.checkDragEnter, event.target.className)
+      }
+    }
   },
 };
 </script>
