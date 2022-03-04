@@ -1,17 +1,18 @@
 <template>
   <div class="sheet__content dough">
     <RadioButton
-      v-for="list of listArray"
+      v-for="list of list.dough"
       :key="list.id"
-      :name="list.name"
-      :desc="list.description"
-      :size="list.size"
+      :checkedItem="list.id === 1"
+      :value="list.id === 1 ? 'light' : list.id === 2 ? 'large' : ''"
       :price="list.price"
-      :className="className"
-      
-      :checkFirst="list == listArray[0] ? true : false"
+      :className="list.id === 1 ? 'dough__input dough__input--light' : list.id === 2 ? 'dough__input dough__input--large' : ''"
+      :classWrap="classWrap"
       @getValueRadio="getValueRadio"
-    />
+    >
+      <b>{{ list.name }}</b>
+      <span>{{ list.description }}</span>
+    </RadioButton>
   </div>
 </template>
 <script>
@@ -21,29 +22,22 @@ export default {
   components: {
     RadioButton,
   },
-  props: ["list"],
-  data() {
-    return {
-      className: "dough",
-    };
-  },
-  computed: {
-    listArray() {
-      let list = this.list.dough;
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].name == "Тонкое") {
-          list[i]["size"] = "light";
-        } else if (list[i].name == "Толстое") {
-          list[i]["size"] = "large";
-        }
-      }
-      return list;
+  props: {
+    list: {
+      type: Object,
+      required: true,
     },
   },
+  data() {
+    return {
+      classWrap: "dough",
+    };
+  },
   methods: {
-    getValueRadio(value, price, multiplier) {
-      this.$emit("getValueRadio", value, price ? price : '', multiplier ? multiplier : '');
-    }
-  }
+    getValueRadio(price, multiplier, value) {
+      this.$emit("getValueRadio", price ? price : "", multiplier ? multiplier : "", value ? value : ""
+      );
+    },
+  },
 };
 </script>

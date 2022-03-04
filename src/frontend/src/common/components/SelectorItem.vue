@@ -13,7 +13,7 @@
         type="button"
         class="counter__button counter__button--minus"
         @click="count--"
-        :disabled="count == minCount ? true : false"
+        :disabled="count === 0"
       >
         <span class="visually-hidden">Меньше</span>
       </button>
@@ -26,31 +26,49 @@
       <button
         type="button"
         class="counter__button counter__button--plus"
-        :disabled="count == maxCount ? true : false"
+        :disabled="count === 3"
         @click="count++"
       >
         <span class="visually-hidden">Больше</span>
       </button>
     </div>
+    {{COUNT}}
   </li>
 </template>
 
 <script>
+import { COUNT, MINCOUNT, MAXCOUNT } from "@/common/helpers";
+
 export default {
   name: "SelectorItem",
-  props: ["name", "className", "ingredientId", "checkDragEnter"],
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    className: {
+      type: String,
+      required: true
+    },
+    checkDragEnter: {
+      type: Boolean,
+      required: true
+    },
+  },
   data() {
     return {
-      maxCount: 3,
-      count: 0,
-      minCount: 0,
+      minCount: MINCOUNT,
+      maxCount: MAXCOUNT,
+      count: COUNT,
+      changedIng: false,
     };
   },
   watch: {
     count: function (val, oldVal) {
       if (val > this.maxCount) this.count = this.maxCount;
-      if (val !== oldVal) {
-        this.$emit("changeIng",  { className: this.className, count: val });
+      if (val != oldVal) {
+        this.$emit("changeIng",  { className: this.className, count: val }, this.changedIng);
+        // console.log(this.changedIng, "+")
       }
     },
   },

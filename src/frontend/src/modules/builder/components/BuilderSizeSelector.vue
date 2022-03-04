@@ -1,15 +1,17 @@
 <template>
   <div class="sheet__content diameter">
     <RadioButton
-      v-for="list of listArray"
+      v-for="list of list.sizes"
       :key="list.id"
-      :name="list.name"
-      :className="className"
-      :multiplier="list.multiplier"
-      :size="list.size"
-      :checkFirst="list == listArray[0] ? true : false"
+      :checkedItem="list.id === 1"
+      :className="list.id === 1 ? 'diameter__input diameter__input--small' : list.id === 2 ? 'diameter__input diameter__input--normal' : list.id === 3 ? 'diameter__input diameter__input--big' : ''"
+      :classWrap="classWrap"
+      :multiplier="list.multiplier ? list.multiplier : ''"
+      :value="list.id === 1 ? 'small' : list.id === 2 ? 'normal' : list.id === 3 ? 'big' : ''"
       @getValueRadio="getValueRadio"
-    />
+    >
+    <span>{{list.name}}</span>
+    </RadioButton>
   </div>
 </template>
 
@@ -20,30 +22,20 @@ export default {
   components: {
     RadioButton,
   },
-  props: ["list"],
+  props: {
+    list: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      className: "diameter",
-    };
-  },
-  computed: {
-    listArray() {
-      let list = this.list.sizes;
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].name == "23 см") {
-          list[i]["size"] = "small";
-        } else if (list[i].name == "32 см") {
-          list[i]["size"] = "normal";
-        } else if (list[i].name == "45 см") {
-          list[i]["size"] = "big";
-        }
-      }
-      return list;
-    },
+      classWrap: 'size'
+    }
   },
   methods: {
-    getValueRadio(value, price, multiplier) {
-      this.$emit("getValueRadio", value, price ? price : '', multiplier ? multiplier : '')
+    getValueRadio(price, multiplier, value) {
+      this.$emit("getValueRadio", price ? price : "", multiplier ? multiplier : "", value ? value : "")
     }
   }
 };

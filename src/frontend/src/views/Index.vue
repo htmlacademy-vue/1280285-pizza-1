@@ -13,7 +13,6 @@
         <div class="content__diameter">
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
-
             <BuilderSize :list="Ingredients" @getValueRadio="getValueRadio" />
           </div>
         </div>
@@ -35,6 +34,8 @@
           :ingObj="ingObj"
           :pizzaClasses="pizzaClasses"
           :calcPrice="calcPrice"
+          :changedIng="changedIng"
+          :value="ingObj.value"
           @pushToCart="pushToCart"
           @dragenter="dragenter"
         />
@@ -61,7 +62,6 @@ export default {
     return {
       Ingredients,
       ingObj: {},
-      pizzaObj: {},
       sauce: "",
       dough: "",
       size: "",
@@ -70,6 +70,7 @@ export default {
       sizeMult: 0,
       ingPrice: 0,
       checkDragEnter: false,
+      changedIng: false
     };
   },
   computed: {
@@ -97,8 +98,7 @@ export default {
     },
   },
   methods: {
-    getValueRadio(value, price, multiplier) {
-      console.log(price, multiplier);
+    getValueRadio(price, multiplier, value) {
       if (value == "light" || value == "large") {
         this.dough = value;
         this.doughPrice = price;
@@ -110,17 +110,18 @@ export default {
         this.saucePrice = price;
       }
     },
-    changeIng(object) {
+    changeIng(object, changedIng) {
+      this.changedIng = changedIng;
       let price = 0;
       this.ingObj[object.className] = object.count;
-
+      
       for (let i in this.ingObj) {
         const ingredientItem = Ingredients.ingredients.find(item => item.class == i);
         let ingredientPrice = ingredientItem.price * this.ingObj[i];
         price += ingredientPrice;
       }
       
-      console.log(this.ingObj, price)
+      // console.log(this.ingObj, price)
       this.ingPrice = price
     },
     pushToCart(finalPrice) {
@@ -135,7 +136,6 @@ export default {
         !document.querySelector(".content__constructor").contains(event.target)
       ) {
         this.checkDragEnter = false;
-        //console.log('dragenter', this.checkDragEnter, event.target.className)
       }
     },
   },

@@ -2,24 +2,25 @@
   <div class="sheet__content ingredients">
     <div class="ingredients__sauce">
       <p>Основной соус:</p>
-
       <RadioButton
-        v-for="sauce of sauceArray"
-        :key="sauce.id"
-        :className="className"
-        :name="sauce.name"
-        :checkFirst="sauce == sauceArray[0] ? true : false"
-        :value="sauce.value"
-        :price="sauce.price"
+        v-for="list of list.sauces"
+        :key="list.id"
+        :checkedItem="list.id === 1"
+        :className="'radio ingredients__input'"
+        :classWrap="classWrap"
+        :value="list.id === 1 ? 'tomato' : list.id === 2 ? 'creamy' : ''"
+        :price="list.price"
         @getValueRadio="getValueRadio"
-      />
+      >
+      <span>{{list.name}}</span>
+      </RadioButton>
     </div>
 
     <div class="ingredients__filling">
       <p>Начинка:</p>
       <ul class="ingredients__list">
         <SelectorItem
-          v-for="ingredient of ingredientsArray"
+          v-for="ingredient of ingArray"
           :ingredientId="ingredient.id"
           :key="ingredient.id"
           :name="ingredient.name"
@@ -37,56 +38,58 @@
 <script>
 import RadioButton from "@/common/components/RadioButton";
 import SelectorItem from "@/common/components/SelectorItem";
+import {ingObj} from "@/common/helpers";
 export default {
   name: "BuilderIngredients",
   components: {
     RadioButton,
     SelectorItem,
   },
-  props: ["list", "checkDragEnter"],
+  props: {
+    list: {
+      type: Object,
+      required: true
+    },
+    checkDragEnter: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
-      className: "sauce",
-    };
+      classWrap: 'sauce',
+      ingObj
+    }
   },
-  computed: {
-    sauceArray() {
-      let sauce = this.list.sauces;
-      for (let i = 0; i < sauce.length; i++) {
-        if (sauce[i].name == "Томатный") {
-          sauce[i]["value"] = "tomato";
-        } else if (sauce[i].name == "Сливочный") {
-          sauce[i]["value"] = "creamy";
-        }
-      }
-      return sauce;
-    },
-    ingredientsArray() {
-      let ingredient = this.list.ingredients;
-      for (let i = 0; i < ingredient.length; i++) {
-        let str = ingredient[i].image;
-        let res = decodeURI(
-          str.substring(str.lastIndexOf("/") + 1, str.length)
-        );
-        let resNew = res.substring(0, res.length - 4);
-        ingredient[i]["class"] = resNew;
-      }
+  // computed: {
+  //   ingredientsArray() {
+  //     let ingredient = this.list.ingredients;
+  //     for (let i = 0; i < ingredient.length; i++) {
+  //       let str = ingredient[i].image;
+  //       let res = decodeURI(
+  //         str.substring(str.lastIndexOf("/") + 1, str.length)
+  //       );
+  //       let resNew = res.substring(0, res.length - 4);
+  //       ingredient[i]["class"] = resNew;
+  //     }
 
-      return ingredient;
-    },
+  //     return ingredient;
+  //   },
+  // },
+  computed: {
+    ingArray() {
+      return ingObj(this.list.ingredients);
+    }
   },
   methods: {
-    getValueRadio(value, price, multiplier) {
-      this.$emit(
-        "getValueRadio",
-        value,
-        price ? price : "",
-        multiplier ? multiplier : ""
+    
+    getValueRadio(price, multiplier, value) {
+      this.$emit("getValueRadio", price ? price : "", multiplier ? multiplier : "", value ? value : ""
       );
       // console.log(value)
     },
-    changeIng(object) {
-      this.$emit("changeIng", { ...object });
+    changeIng(object, changedIng) {
+      this.$emit("changeIng", { ...object }, changedIng);
     },
   },
 };
