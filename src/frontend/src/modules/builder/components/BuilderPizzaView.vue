@@ -12,11 +12,11 @@
     <div class="content__constructor" @dragenter="dragenter">
       <div class="pizza" :class="pizzaClasses">
         <div class="pizza__wrapper">
-            <div
-              v-for="(value, className) in ingObj" :key="className"
-              class="pizza__filling"
-              :class="checkClasses(value, className)"
-            ></div>
+          <div v-for="(value, className) in ingObj" :key="value.id">
+            <div v-for="index of value" :key="index.id" class="pizza__filling" :class="checkClasses(index, className)">
+              
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +42,6 @@ export default {
       pizzaName: "",
       checkDragEnter: false,
       checkStatus: true,
-      // changedIng: this.ingObj
     };
   },
   props: {
@@ -86,13 +85,13 @@ export default {
     },
     checkClasses(value, nameIng) {
       let className = "";
-      if (value !== 0) {
+      if (value >= 1) {
         className = `pizza__filling--${nameIng}`;
       }
-      if (value >= 2) {
+      if (value == 2) {
         className = `pizza__filling--${nameIng} pizza__filling--second`;
       }
-      if (value >= 3) {
+      if (value == 3) {
         className = `pizza__filling--${nameIng} pizza__filling--third`;
       }
       return className;

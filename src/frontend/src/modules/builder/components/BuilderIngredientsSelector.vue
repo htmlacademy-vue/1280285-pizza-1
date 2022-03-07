@@ -12,7 +12,7 @@
         :price="list.price"
         @getValueRadio="getValueRadio"
       >
-      <span>{{list.name}}</span>
+        <span>{{ list.name }}</span>
       </RadioButton>
     </div>
 
@@ -28,6 +28,7 @@
           :className="ingredient.class"
           @changeIng="changeIng"
           :checkDragEnter="checkDragEnter"
+          :checkDraggable="true"
         />
       </ul>
     </div>
@@ -38,7 +39,8 @@
 <script>
 import RadioButton from "@/common/components/RadioButton";
 import SelectorItem from "@/common/components/SelectorItem";
-import {ingObj} from "@/common/helpers";
+
+import { ingObj } from "@/common/helpers";
 export default {
   name: "BuilderIngredients",
   components: {
@@ -48,18 +50,18 @@ export default {
   props: {
     list: {
       type: Object,
-      required: true
+      required: true,
     },
     checkDragEnter: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      classWrap: 'sauce',
-      ingObj
-    }
+      classWrap: "sauce",
+      ingObj,
+    };
   },
   // computed: {
   //   ingredientsArray() {
@@ -79,17 +81,21 @@ export default {
   computed: {
     ingArray() {
       return ingObj(this.list.ingredients);
-    }
+    },
   },
   methods: {
-    
     getValueRadio(price, multiplier, value) {
-      this.$emit("getValueRadio", price ? price : "", multiplier ? multiplier : "", value ? value : ""
+      this.$emit(
+        "getValueRadio",
+        price ? price : "",
+        multiplier ? multiplier : "",
+        value ? value : ""
       );
       // console.log(value)
     },
-    changeIng(object, changedIng) {
-      this.$emit("changeIng", { ...object }, changedIng);
+    changeIng(object) {
+      console.log(object)
+      this.$emit("changeIng", { ...object });
     },
   },
 };
