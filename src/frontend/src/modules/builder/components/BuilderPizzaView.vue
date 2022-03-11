@@ -13,9 +13,12 @@
       <div class="pizza" :class="pizzaClasses">
         <div class="pizza__wrapper">
           <div v-for="(value, className) in ingObj" :key="value.id">
-            <div v-for="index of value" :key="index.id" class="pizza__filling" :class="checkClasses(index, className)">
-              
-            </div>
+            <div
+              v-for="index of value"
+              :key="index.id"
+              class="pizza__filling"
+              :class="checkClasses(index, className)"
+            ></div>
           </div>
         </div>
       </div>
