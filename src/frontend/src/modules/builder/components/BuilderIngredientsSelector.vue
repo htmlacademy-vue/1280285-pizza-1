@@ -63,21 +63,6 @@ export default {
       ingObj,
     };
   },
-  // computed: {
-  //   ingredientsArray() {
-  //     let ingredient = this.list.ingredients;
-  //     for (let i = 0; i < ingredient.length; i++) {
-  //       let str = ingredient[i].image;
-  //       let res = decodeURI(
-  //         str.substring(str.lastIndexOf("/") + 1, str.length)
-  //       );
-  //       let resNew = res.substring(0, res.length - 4);
-  //       ingredient[i]["class"] = resNew;
-  //     }
-
-  //     return ingredient;
-  //   },
-  // },
   computed: {
     ingArray() {
       return ingObj(this.list.ingredients);

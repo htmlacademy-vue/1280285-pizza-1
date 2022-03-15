@@ -13,7 +13,7 @@
         type="button"
         class="counter__button counter__button--minus"
         @click="count--"
-        :disabled="count === 0"
+        :disabled="count === minCount"
       >
         <span class="visually-hidden">Меньше</span>
       </button>
@@ -26,7 +26,7 @@
       <button
         type="button"
         class="counter__button counter__button--plus"
-        :disabled="count === 3"
+        :disabled="count === maxCount"
         @click="count++"
       >
         <span class="visually-hidden">Больше</span>
@@ -74,8 +74,9 @@ export default {
       if (val != oldVal) {
         let objectIng = { className: this.className, count: val };
         this.changeIng(objectIng);
-        // console.log(this.changedIng, "+")
+        return objectIng
       }
+      
     },
   },
   methods: {
