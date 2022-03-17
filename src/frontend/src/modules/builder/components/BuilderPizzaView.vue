@@ -12,10 +12,13 @@
     <div class="content__constructor" @dragenter="dragenter">
       <div class="pizza" :class="pizzaClasses">
         <div class="pizza__wrapper">
-          <div v-for="(value, className) in ingObj" :key="value.id">
-            <div v-for="index of value" :key="index.id" class="pizza__filling" :class="checkClasses(index, className)">
-              
-            </div>
+          <div v-for="(countItems, className) in ingObj" :key="countItems.id">
+            <div
+              v-for="countItem of countItems"
+              :key="countItem.id"
+              class="pizza__filling"
+              :class="checkClasses(countItem, className)"
+            ></div>
           </div>
         </div>
       </div>

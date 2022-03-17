@@ -1,37 +1,37 @@
 <template>
   <li class="ingredients__item">
-    <AppDrag :count="count" :checkDragEnter="checkDragEnter" @dragend="dragend" :checkDraggable="checkDraggable">
-      <span
-        
-        class="filling"
-        :class="`filling--${className}`"
-        >{{ name }}</span
-      >
-      <div class="counter counter--orange ingredients__counter">
-        <button
-          type="button"
-          class="counter__button counter__button--minus"
-          @click="count--"
-          :disabled="count === 0"
-        >
-          <span class="visually-hidden">Меньше</span>
-        </button>
-        <input
-          type="text"
-          name="counter"
-          class="counter__input"
-          v-model="count"
-        />
-        <button
-          type="button"
-          class="counter__button counter__button--plus"
-          :disabled="count === 3"
-          @click="count++"
-        >
-          <span class="visually-hidden">Больше</span>
-        </button>
-      </div>
+    <AppDrag
+      :count="count"
+      :checkDragEnter="checkDragEnter"
+      @dragend="dragend"
+      :checkDraggable="checkDraggable"
+    >
+      <span class="filling" :class="`filling--${className}`">{{ name }}</span>
     </AppDrag>
+    <div class="counter counter--orange ingredients__counter">
+      <button
+        type="button"
+        class="counter__button counter__button--minus"
+        @click="count--"
+        :disabled="count === minCount"
+      >
+        <span class="visually-hidden">Меньше</span>
+      </button>
+      <input
+        type="text"
+        name="counter"
+        class="counter__input"
+        v-model="count"
+      />
+      <button
+        type="button"
+        class="counter__button counter__button--plus"
+        :disabled="count === maxCount"
+        @click="count++"
+      >
+        <span class="visually-hidden">Больше</span>
+      </button>
+    </div>
   </li>
 </template>
 
@@ -41,16 +41,16 @@ import AppDrag from "@/common/components/AppDrag";
 export default {
   name: "SelectorItem",
   components: {
-    AppDrag
+    AppDrag,
   },
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     className: {
       type: String,
-      required: true
+      required: true,
     },
     checkDragEnter: {
       type: Boolean,
@@ -59,7 +59,7 @@ export default {
     checkDraggable: {
       type: Boolean,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -72,10 +72,11 @@ export default {
     count: function (val, oldVal) {
       if (val > this.maxCount) this.count = this.maxCount;
       if (val != oldVal) {
-        let objectIng = {className: this.className, count: val}
-        this.changeIng(objectIng)
-        // console.log(this.changedIng, "+")
+        let objectIng = { className: this.className, count: val };
+        this.changeIng(objectIng);
+        return objectIng
       }
+      
     },
   },
   methods: {
@@ -83,10 +84,9 @@ export default {
       this.$emit("changeIng", { ...object });
     },
     dragend(count) {
-      count > this.maxCount ? count = this.count : this.count = count
-    }
+      count > this.maxCount ? (count = this.count) : (this.count = count);
+    },
   },
-  
 };
 </script>
 

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <AppLayout />
+    <AppLayout :finalPriceHeader="finalPriceHeader">
+      <router-view @pushToCart="pushToCart"></router-view>
+    </AppLayout>
   </div>
 </template>
 
@@ -12,6 +14,16 @@ export default {
   name: "App",
   components: {
     AppLayout,
+  },
+  data() {
+    return {
+      finalPriceHeader: 0,
+    };
+  },
+  methods: {
+    pushToCart(finalPrice) {
+      this.finalPriceHeader = finalPrice;
+    },
   },
 };
 </script>
