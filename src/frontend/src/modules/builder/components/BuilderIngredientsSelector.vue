@@ -5,7 +5,7 @@
       <RadioButton
         v-for="list of list.sauces"
         :key="list.id"
-        :checkedItem="list.id === 1"
+        :checkedItem="getSauceSelector == 'tomato' ? list.id === 1 : getSauceSelector == 'creamy' ? list.id === 2 : list.id === 1"
         :className="'radio ingredients__input'"
         :classWrap="classWrap"
         :value="list.id === 1 ? 'tomato' : list.id === 2 ? 'creamy' : ''"
@@ -67,19 +67,19 @@ export default {
     ingArray() {
       return ingObj(this.list.ingredients);
     },
+    getSauceSelector() {
+      return this.$store.getters.getSauceSelector
+    },
   },
   methods: {
     getValueRadio(price, multiplier, value) {
-      this.$emit(
-        "getValueRadio",
-        price ? price : "",
-        multiplier ? multiplier : "",
-        value ? value : ""
-      );
+      this.$store.commit("setCurrentSaucePrice", price)
+      this.$store.commit("setSauceSelector", value);
+      this.$emit("getValueRadio");
       // console.log(value)
     },
     changeIng(object) {
-      console.log(object)
+      // console.log(object)
       this.$emit("changeIng", { ...object });
     },
   },

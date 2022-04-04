@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <AppLayout :finalPriceHeader="finalPriceHeader">
-      <router-view @pushToCart="pushToCart"></router-view>
+    <AppLayout>
+      <router-view></router-view>
     </AppLayout>
   </div>
 </template>
@@ -19,11 +19,6 @@ export default {
     return {
       finalPriceHeader: 0,
     };
-  },
-  methods: {
-    pushToCart(finalPrice) {
-      this.finalPriceHeader = finalPrice;
-    },
   },
 };
 </script>

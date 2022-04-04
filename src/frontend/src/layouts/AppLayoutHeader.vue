@@ -11,7 +11,7 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ finalPriceHeader }} ₽</router-link>
+      <router-link to="/cart">{{totalPrice}} ₽</router-link>
     </div>
 
     <div class="header__user" v-if="isAuthorized == false">
@@ -44,15 +44,12 @@
 <script>
 export default {
   name: "AppLayoutHeader",
-  props: {
-    finalPriceHeader: {
-      type: Number,
-      required: true,
-    },
-  },
   computed: {
     isAuthorized() {
       return false;
+    },
+    totalPrice() {
+      return this.$store.state.Builder.currentPizza.totalPrice;
     },
   },
 };

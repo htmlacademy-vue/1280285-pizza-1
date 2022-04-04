@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { COUNT, MINCOUNT, MAXCOUNT } from "@/common/helpers";
+import { MINCOUNT, MAXCOUNT } from "@/common/helpers";
 import AppDrag from "@/common/components/AppDrag";
 export default {
   name: "SelectorItem",
@@ -65,8 +65,13 @@ export default {
     return {
       minCount: MINCOUNT,
       maxCount: MAXCOUNT,
-      count: COUNT,
+      count: 0,
     };
+  },
+  computed: {
+    getIngSelector() {
+      return this.$store.getters.getIngSelector;
+    }
   },
   watch: {
     count: function (val, oldVal) {
@@ -74,9 +79,8 @@ export default {
       if (val != oldVal) {
         let objectIng = { className: this.className, count: val };
         this.changeIng(objectIng);
-        return objectIng
+        return objectIng;
       }
-      
     },
   },
   methods: {
@@ -87,6 +91,10 @@ export default {
       count > this.maxCount ? (count = this.count) : (this.count = count);
     },
   },
+
+  mounted() {
+    this.count = this.getIngSelector[this.className] ? Number(this.getIngSelector[this.className]) : 0;
+  }
 };
 </script>
 
