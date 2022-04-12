@@ -26,20 +26,29 @@ export default {
       return this.$store.state.Builder.currentPizza.ingPrice;
     },
     currentPizza() {
-      return this.$store.state.Builder.currentPizza;
+      return this.$store.getters.getCurrentPizza;
     },
     currentMultiplierPizza() {
       return this.$store.state.Builder.currentPizza.multiplier;
     },
     totalPrice() {
       return (this.currentSaucePrice + this.currentIngPrice + this.currentDoughtPrice) * this.currentMultiplierPizza
-    }
+    },
+    getCartOrders() {
+      return this.$store.getters.getCartOrders;
+    },
   },
   methods: {
     pushToCart() {
       let totalPrice = (this.currentSaucePrice + this.currentIngPrice + this.currentDoughtPrice) * this.currentMultiplierPizza
       this.$store.commit("setTotalPrice", totalPrice);
-      this.$store.commit("pushToCart", this.currentPizza);
+      let pizza = this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) ? this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) : null;
+      if (pizza !== null && this.currentPizza.pizzaID == pizza.pizzaID){
+        this.$store.commit("updateCartObj", this.currentPizza)
+      } else {
+        this.$store.commit("setPizzaId", Math.random())
+        this.$store.commit("pushToCart", this.currentPizza);
+      }
       
     },
   },

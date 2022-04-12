@@ -129,6 +129,7 @@ export default {
     changeIng(object, changedIng) {
       this.changedIng = changedIng;
       let price = 0;
+      
       this.ingObj[object.className] = object.count;
       let ingNames = "";
       for (let i in this.ingObj) {
@@ -143,6 +144,7 @@ export default {
         price += ingredientPrice;
         this.$store.commit("setIngSelector", this.ingObj);
       }
+      
       ingNames = ingNames.substring(0, ingNames.length - 2);
       this.$store.commit("setIngNames", ingNames);
       this.$store.commit("setCurrentPriceIng", price);

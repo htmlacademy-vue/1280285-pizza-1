@@ -93,7 +93,7 @@ export default {
   },
 
   mounted() {
-    this.count = this.getIngSelector[this.className] ? Number(this.getIngSelector[this.className]) : 0;
+    this.count = this.getIngSelector[this.className] ? this.getIngSelector[this.className] : 0;
   }
 };
 </script>

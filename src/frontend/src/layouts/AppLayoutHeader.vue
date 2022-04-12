@@ -11,7 +11,7 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{totalPrice}} ₽</router-link>
+      <router-link to="/cart">{{headerPrice}} ₽</router-link>
     </div>
 
     <div class="header__user" v-if="isAuthorized == false">
@@ -48,9 +48,17 @@ export default {
     isAuthorized() {
       return false;
     },
-    totalPrice() {
-      return this.$store.state.Builder.currentPizza.totalPrice;
+    getCartOrders() {
+      return this.$store.getters.getCartOrders
     },
+    headerPrice() {
+      let totalPrice = 0;
+      let array = this.getCartOrders
+      array.forEach((element) => {
+        totalPrice += element.totalPrice
+      });
+      return totalPrice
+    }
   },
 };
 </script>

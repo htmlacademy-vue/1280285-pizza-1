@@ -4,9 +4,10 @@ export default {
   
   state: {
     cartObj: [],
-    pizzaIndex: null,
+    // pizzaIndex: null,
     // totalPrice: 0,
     currentPizza: {
+      pizzaID: null,
       namePizza: '',
       dought: '',
       sauce: '',
@@ -19,7 +20,25 @@ export default {
       nameIng: '',
       doughtDesc: '',
       sizeDesc: '',
-      sauceDesc: ''
+      sauceDesc: '',
+      count: 1
+    },
+    templatePizza: {
+      pizzaID: null,
+      namePizza: '',
+      dought: '',
+      sauce: '',
+      ing: {},
+      ingPrice: 0,
+      doughtPrice: 0,
+      saucePrice: 0,
+      totalPrice: 0,
+      multiplier: 0,
+      nameIng: '',
+      doughtDesc: '',
+      sizeDesc: '',
+      sauceDesc: '',
+      count: 1
     }
 
   },
@@ -27,9 +46,9 @@ export default {
     getCartOrders(state) {
       return state.cartObj;
     },
-    // getPrice(state) {
-    //   return state.totalPrice;
-    // },
+    getCountPizza(state) {
+      return state.currentPizza.count
+    },
     getDoughtSelector(state) {
       return state.currentPizza.dought
     },
@@ -37,8 +56,7 @@ export default {
       return state.currentPizza.sauce
     },
     getIngSelector(state) {
-      //return state.currentPizza.ing
-      return state.pizzaIndex !== null ? state.cartObj[pizzaIndex] :  state.currentPizza.ing;
+      return state.currentPizza.ing
     },
     getIngPrice(state) {
       return state.currentPizza.ingPrice
@@ -54,6 +72,7 @@ export default {
     },
     getMultiplier(state) {
       return state.currentPizza.multiplier
+      // return state.currentPizza.pizzaIndex !== null ? state.cartObj[state.currentPizza.pizzaIndex].multiplier : 0;
     },
     getNameIng(state) {
       return state.currentPizza.nameIng
@@ -69,12 +88,15 @@ export default {
     },
     getNamePizza(state) {
       return state.currentPizza.namePizza
+    },
+    getCurrentPizza(state) {
+      return state.currentPizza
+    },
+    getTemplatePizza(state) {
+      return state.templatePizza
     }
   },
   mutations: {
-    // setCurrentObj(state, value) {
-    //   state.currentPizza = value
-    // },
     setDoughtDesc(state,value) {
       state.currentPizza.doughtDesc = value
     },
@@ -118,9 +140,25 @@ export default {
       let newObj = {... obj}
       state.cartObj.push(newObj)
     },
-    setEditingPizza(state, index) {
-      state.pizzaIndex = index;
-    }
+    setPizzaId(state, id) {
+      state.currentPizza.pizzaID = id;
+    },
+    updateCartObj(state, newArrayItem) {
+      function check() {
+        let checkIndex = null
+        state.cartObj.forEach((el, i) => {
+          if (el.pizzaID == newArrayItem.pizzaID) {
+            checkIndex = i
+          }
+        });
+        return checkIndex
+      }
+      state.cartObj.splice(check(), 1);
+      state.cartObj.push(newArrayItem)
+    },
+    setPizzaObj(state, newObj) {
+      state.currentPizza = {...newObj}
+    },
   },
   actions: {},
 }

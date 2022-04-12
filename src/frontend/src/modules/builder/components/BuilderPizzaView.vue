@@ -107,5 +107,8 @@ export default {
       this.checkValues();
     },
   },
+  mounted() {
+    this.pizzaName = this.getNamePizza != '' ? this.getNamePizza : '';
+  }
 };
 </script>
