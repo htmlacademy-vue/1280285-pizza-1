@@ -108,7 +108,7 @@ export default {
     },
   },
   mounted() {
-    this.pizzaName = this.getNamePizza != '' ? this.getNamePizza : '';
+    this.pizzaName = this.getNamePizza
   }
 };
 </script>

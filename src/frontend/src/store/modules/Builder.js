@@ -1,5 +1,5 @@
 /* eslint-disable */
-
+import {TEMPLATEPIZZA} from "../../common/helpers";
 export default {
   
   state: {
@@ -23,23 +23,7 @@ export default {
       sauceDesc: '',
       count: 1
     },
-    templatePizza: {
-      pizzaID: null,
-      namePizza: '',
-      dought: '',
-      sauce: '',
-      ing: {},
-      ingPrice: 0,
-      doughtPrice: 0,
-      saucePrice: 0,
-      totalPrice: 0,
-      multiplier: 0,
-      nameIng: '',
-      doughtDesc: '',
-      sizeDesc: '',
-      sauceDesc: '',
-      count: 1
-    }
+    
 
   },
   getters: {
@@ -159,6 +143,9 @@ export default {
     setPizzaObj(state, newObj) {
       state.currentPizza = {...newObj}
     },
+    resetPizzaObj(state) {
+      state.currentPizza = {...TEMPLATEPIZZA}
+    }
   },
   actions: {},
 }

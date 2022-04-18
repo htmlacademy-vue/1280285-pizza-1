@@ -70,6 +70,7 @@ export default {
     getSauceSelector() {
       return this.$store.getters.getSauceSelector
     },
+
   },
   methods: {
     getValueRadio(price, multiplier, value) {

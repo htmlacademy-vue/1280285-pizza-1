@@ -79,7 +79,7 @@ export default {
   watch: {
     count: function (val, oldVal) {
       if (val > this.maxCount) this.count = this.maxCount;
-      if (val != oldVal) {
+      if (val !== oldVal) {
         
         let additionalObj = {name: this.name, count: val}
         this.changeAdditionalItem(additionalObj)

@@ -42,11 +42,11 @@ export default {
     pushToCart() {
       let totalPrice = (this.currentSaucePrice + this.currentIngPrice + this.currentDoughtPrice) * this.currentMultiplierPizza
       this.$store.commit("setTotalPrice", totalPrice);
-      let pizza = this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) ? this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) : null;
-      if (pizza !== null && this.currentPizza.pizzaID == pizza.pizzaID){
+      //let pizza = this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) ? this.getCartOrders.find((el) => el.pizzaID == this.currentPizza.pizzaID) : null;
+      if (this.currentPizza.pizzaID != null){
         this.$store.commit("updateCartObj", this.currentPizza)
       } else {
-        this.$store.commit("setPizzaId", Math.random())
+        // this.$store.commit("setPizzaId", this.currentPizza.namePizza + Math.random())
         this.$store.commit("pushToCart", this.currentPizza);
       }
       

@@ -39,7 +39,7 @@
                 @click="order.count--"
                 type="button"
                 class="counter__button counter__button--minus"
-                :disabled="order.count == 0"
+                :disabled="order.count === 0"
               >
                 <span class="visually-hidden">Меньше</span>
               </button>
@@ -52,7 +52,7 @@
               <button
                 type="button"
                 @click="order.count++"
-                :disabled="order.count == 3"
+                :disabled="order.count === 3"
                 class="
                   counter__button counter__button--plus counter__button--orange
                 "
@@ -69,7 +69,7 @@
               <button
                 type="button"
                 class="cart-list__edit"
-                @click="changeOrder(order)"
+                @click="changeOrder(order, index)"
               >
                 Изменить
               </button>
@@ -208,39 +208,32 @@ export default {
       "getPhoneNumber",
       "isAuthorizedUser",
     ]),
-    // getCartOrders() {
-    //   return this.$store.getters.getCartOrders;
-    // },
-    // getAdditionalItem() {
-    //   return this.$store.getters.getAdditionalItem;
-    // },
-    // getAdditionalPrice() {
-    //   return this.$store.getters.getAdditionalPrice;
-    // },
-    // getCurrentPizza() {
-    //   return this.$store.getters.getCurrentPizza;
-    // },
-    // getTemplatePizza() {
-    //   return this.$store.getters.getTemplatePizza;
-    // },
-    // getCountPizza() {
-    //   return this.$store.getters.getCountPizza;
-    // },
     
     cartPrice() {
       let totalPrice = 0;
-      let count = 0;
+      let finalPrice = [];
+      const initialValue = 0;
       let array = this.getCartOrders;
       array.forEach((element) => {
-        totalPrice += element.totalPrice;
-        count += element.count;
+        totalPrice = element.totalPrice * element.count;
+        finalPrice.push(totalPrice)
+        
+        
       });
-      return count * totalPrice + this.getAdditionalPrice;
-    },
+      let sumWithInitial = finalPrice.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+      );
+      // return totalPrice + this.getAdditionalPrice;
+      return sumWithInitial
+    }
   },
   methods: {
-    changeOrder(order) {
+    changeOrder(order, index) {
       this.$store.commit("setPizzaObj", order);
+      if (order.pizzaID == null) {
+        this.$store.commit("setPizzaId", index)
+      }
       this.$router.push({
         path: "/",
       });
@@ -251,7 +244,7 @@ export default {
       })
     },
     morePizza() {
-      this.$store.commit("setPizzaObj", this.getTemplatePizza);
+      this.$store.commit("resetPizzaObj");
       this.$router.push({
         path: "/",
       });
