@@ -3,7 +3,7 @@
     <RadioButton
       v-for="list of list.dough"
       :key="list.id"
-      :checkedItem="getDought == 'light' ? list.id === 1 : getDought == 'large' ? list.id === 2 : list.id === 1"
+      :checkedItem="list.id === currentDoughtSelector"
       :value="list.id === 1 ? 'light' : list.id === 2 ? 'large' : ''"
       :price="list.price"
       :className="list.id === 1 ? 'dough__input dough__input--light' : list.id === 2 ? 'dough__input dough__input--large' : ''"
@@ -46,6 +46,10 @@ export default {
     getDought() {
       return this.$store.getters.getDoughtSelector
     },
+    currentDoughtSelector() {
+      let selector = this.getDought == 'light' ? 1 : this.getDought == 'large' ? 2 : 1
+      return selector
+    }
   }
 };
 </script>

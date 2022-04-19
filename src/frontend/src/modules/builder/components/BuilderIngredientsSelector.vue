@@ -2,13 +2,14 @@
   <div class="sheet__content ingredients">
     <div class="ingredients__sauce">
       <p>Основной соус:</p>
+
       <RadioButton
         v-for="list of list.sauces"
         :key="list.id"
-        :checkedItem="getSauceSelector == 'tomato' ? list.id === 1 : getSauceSelector == 'creamy' ? list.id === 2 : list.id === 1"
+        :checkedItem="list.id === currentSauceSelector"
         :className="'radio ingredients__input'"
         :classWrap="classWrap"
-        :value="list.id === 1 ? 'tomato' : list.id === 2 ? 'creamy' : ''"
+        :value="list.id == 1 ? 'tomato' : list.id === 2 ? 'creamy' : ''"
         :price="list.price"
         @getValueRadio="getValueRadio"
       >
@@ -70,6 +71,10 @@ export default {
     getSauceSelector() {
       return this.$store.getters.getSauceSelector
     },
+    currentSauceSelector() {
+      let selector = this.getSauceSelector == 'tomato' ? 1 : this.getSauceSelector == 'creamy' ? 2 : 1
+      return selector
+    }
 
   },
   methods: {
