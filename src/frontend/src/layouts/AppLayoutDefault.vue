@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout-default">
-    <AppLayoutHeader :finalPriceHeader="finalPriceHeader"></AppLayoutHeader>
+    <AppLayoutHeader></AppLayoutHeader>
     <slot />
   </div>
 </template>
@@ -10,12 +10,6 @@ import AppLayoutHeader from "@/layouts/AppLayoutHeader";
 
 export default {
   name: "AppLayout",
-  props: {
-    finalPriceHeader: {
-      type: Number,
-      required: true,
-    }
-  },
   components: {
     AppLayoutHeader,
   },

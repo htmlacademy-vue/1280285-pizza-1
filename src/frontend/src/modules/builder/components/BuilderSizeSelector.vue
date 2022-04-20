@@ -3,7 +3,7 @@
     <RadioButton
       v-for="list of list.sizes"
       :key="list.id"
-      :checkedItem="list.id === 1"
+      :checkedItem="list.id === currentSizeSelector"
       :className="list.id === 1 ? 'diameter__input diameter__input--small' : list.id === 2 ? 'diameter__input diameter__input--normal' : list.id === 3 ? 'diameter__input diameter__input--big' : ''"
       :classWrap="classWrap"
       :multiplier="list.multiplier ? list.multiplier : ''"
@@ -34,8 +34,19 @@ export default {
     }
   },
   methods: {
-    getValueRadio(price, multiplier, value) {
-      this.$emit("getValueRadio", price ? price : "", multiplier ? multiplier : "", value ? value : "")
+    getValueRadio(price, multiplier) {
+      this.$store.commit("setSizeMultiplier", multiplier);
+      this.$emit("getValueRadio");
+      
+    }
+  },
+  computed: {
+    getMultiplier() {
+      return this.$store.getters.getMultiplier
+    },
+    currentSizeSelector() {
+      let selector = this.getMultiplier == 1 ?  1 : this.getMultiplier == 2 ?  2 : this.getMultiplier == 3 ? 3 : 1
+      return selector
     }
   }
 };

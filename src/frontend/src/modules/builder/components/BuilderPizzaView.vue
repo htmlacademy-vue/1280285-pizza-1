@@ -12,7 +12,8 @@
     <div class="content__constructor" @dragenter="dragenter">
       <div class="pizza" :class="pizzaClasses">
         <div class="pizza__wrapper">
-          <div v-for="(countItems, className) in ingObj" :key="countItems.id">
+          <div v-for="(countItems, className) in currentIng" :key="countItems.id">
+            
             <div
               v-for="countItem of countItems"
               :key="countItem.id"
@@ -24,11 +25,7 @@
       </div>
     </div>
     <ItemCounter
-      :calcPrice="calcPrice"
-      :pizzaName="pizzaName"
-      :ingObj="ingObj"
       :checkStatus="checkStatus"
-      @pushToCart="pushToCart"
     />
   </div>
 </template>
@@ -48,23 +45,23 @@ export default {
     };
   },
   props: {
-    ingObj: {
-      type: Object,
-      required: true,
-    },
     pizzaClasses: {
       type: String,
       required: true,
     },
-    calcPrice: {
-      type: Number,
-      required: true,
+  },
+  computed: {
+    currentIng() {
+      return this.$store.state.Builder.currentPizza.ing;
     },
+    currentIngPrice() {
+      return this.$store.state.Builder.currentPizza.ingPrice;
+    },
+    getNamePizza() {
+      return this.$store.getters.getNamePizza;
+    }
   },
   methods: {
-    pushToCart(finalPrice) {
-      this.$emit("pushToCart", finalPrice);
-    },
     dragenter(event) {
       if (
         event.target.className == "content__constructor" ||
@@ -77,12 +74,12 @@ export default {
     },
     checkValues() {
       let checkArray = [];
-      for (let key in this.ingObj) {
-        checkArray.push(this.ingObj[key] == 0);
+      for (let key in this.currentIng) {
+        checkArray.push(this.currentIng[key] == 0);
       }
       let emptyIngredients = checkArray.every((el) => el == true);
       this.checkStatus =
-        Object.keys(this.ingObj).length == 0 ||
+        Object.keys(this.currentIng).length == 0 ||
         emptyIngredients ||
         this.pizzaName == "";
     },
@@ -103,10 +100,15 @@ export default {
   watch: {
     pizzaName: function () {
       this.checkValues();
+      this.$store.commit("setCurrentName", this.pizzaName);
+      
     },
-    calcPrice: function () {
+    currentIngPrice: function () {
       this.checkValues();
     },
   },
+  mounted() {
+    this.pizzaName = this.getNamePizza
+  }
 };
 </script>

@@ -4,6 +4,7 @@ import Cart from '@/views/Cart.vue'
 import Profile from '@/views/Profile.vue'
 import Login from '@/views/Login.vue'
 import Orders from '@/views/Orders.vue'
+import Popup from '@/views/Popup.vue'
 
 export default [
     {
@@ -36,4 +37,10 @@ export default [
         component: Orders,
         meta: { layout: 'AppLayoutDefault' },
     },
+    {
+      path: '/popup',
+      name: 'Popup',
+      component: Popup,
+      meta: { layout: 'AppLayoutDefault' },
+    }
 ];

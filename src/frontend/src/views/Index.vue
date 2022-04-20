@@ -31,15 +31,12 @@
           </div>
         </div>
         <BuilderPizza
-          :ingObj="ingObj"
           :pizzaClasses="pizzaClasses"
-          :calcPrice="calcPrice"
           :changedIng="changedIng"
-          :value="ingObj.value"
-          @pushToCart="pushToCart"
           @dragenter="dragenter"
         />
       </div>
+     
     </form>
   </main>
 </template>
@@ -50,6 +47,7 @@ import BuilderDough from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSize from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredients from "@/modules/builder/components/BuilderIngredientsSelector";
 import BuilderPizza from "@/modules/builder/components/BuilderPizzaView";
+
 export default {
   name: "Index",
   components: {
@@ -62,70 +60,94 @@ export default {
     return {
       Ingredients,
       ingObj: {},
-      sauce: "",
-      dough: "",
-      size: "",
-      saucePrice: 0,
-      doughPrice: 0,
-      sizeMult: 0,
-      ingPrice: 0,
+      cartObj: {},
+      //sauce: "",
+      // dough: "",
+      // size: "",
+      // saucePrice: 0,
+      // doughPrice: 0,
+      // sizeMult: 0,
+      // ingPrice: 0,
       checkDragEnter: false,
-      changedIng: false
+      changedIng: false,
     };
   },
   computed: {
+    currentDought() {
+      return this.$store.state.Builder.currentPizza.dought;
+    },
+    currentSauce() {
+      return this.$store.state.Builder.currentPizza.sauce;
+    },
+    currentSize() {
+      return this.$store.state.Builder.currentPizza.multiplier;
+    },
     pizzaClasses() {
       let classForPizza = "";
-      if (this.sauce == "tomato" && this.dough == "large") {
+      if (this.currentSauce == "tomato" && this.currentDought == "large") {
         classForPizza = "pizza--foundation--big-tomato";
       }
-      if (this.sauce == "tomato" && this.dough == "light") {
+      if (this.currentSauce == "tomato" && this.currentDought == "light") {
         classForPizza = "pizza--foundation--small-tomato";
       }
-      if (this.sauce == "creamy" && this.dough == "large") {
+      if (this.currentSauce == "creamy" && this.currentDought == "large") {
         classForPizza = "pizza--foundation--big-creamy";
       }
-      if (this.sauce == "creamy" && this.dough == "light") {
+      if (this.currentSauce == "creamy" && this.currentDought == "light") {
         classForPizza = "pizza--foundation--small-creamy";
       }
 
       return classForPizza;
     },
-    calcPrice() {
-      let fullPrice =
-        (this.ingPrice + this.saucePrice + this.doughPrice) * this.sizeMult;
-      return fullPrice;
-    },
   },
   methods: {
-    getValueRadio(price, multiplier, value) {
-      if (value == "light" || value == "large") {
-        this.dough = value;
-        this.doughPrice = price;
-      } else if (value == "small" || value == "normal" || value == "big") {
-        this.size = value;
-        this.sizeMult = multiplier;
-      } else if (value == "creamy" || value == "tomato") {
-        this.sauce = value;
-        this.saucePrice = price;
+    getValueRadio() {
+      if (this.currentDought == "light" || this.currentDought == "large") {
+        if (this.currentDought == "light") {
+          this.$store.commit("setDoughtDesc", "на тонком тесте");
+        } else if (this.currentDought == "large") {
+          this.$store.commit("setDoughtDesc", 'на толстом тесте');
+        }
+      }
+      if (this.currentSize == 1 || this.currentSize == 2 || this.currentSize == 3) {
+        if (this.currentSize == 1) {
+          this.$store.commit("setSizeDesc", "23 см")
+        } else if (this.currentSize == 2) {
+          this.$store.commit("setSizeDesc", "32 cм")
+        } else if (this.currentSize == 3) {
+          this.$store.commit("setSizeDesc", "45 см")
+        }
+      }
+      if (this.currentSauce == "creamy" || this.currentSauce == "tomato") {
+        if (this.currentSauce == "creamy") {
+          this.$store.commit("setSauceDesc", "сливочный")
+        } else if (this.currentSauce == "tomato") {
+          this.$store.commit("setSauceDesc", "томатный")
+        }
       }
     },
     changeIng(object, changedIng) {
       this.changedIng = changedIng;
       let price = 0;
-      this.ingObj[object.className] = object.count;
       
+      this.ingObj[object.className] = object.count;
+      let ingNames = "";
       for (let i in this.ingObj) {
-        const ingredientItem = Ingredients.ingredients.find(item => item.class == i);
+        const ingredientItem = Ingredients.ingredients.find(
+          (item) => item.class == i
+        );
+        ingNames +=
+          ingredientItem.name.charAt(0).toLowerCase() +
+          ingredientItem.name.slice(1) +
+          ", ";
         let ingredientPrice = ingredientItem.price * this.ingObj[i];
         price += ingredientPrice;
+        this.$store.commit("setIngSelector", this.ingObj);
       }
       
-      // console.log(this.ingObj, price)
-      this.ingPrice = price
-    },
-    pushToCart(finalPrice) {
-      this.$emit("pushToCart", finalPrice);
+      ingNames = ingNames.substring(0, ingNames.length - 2);
+      this.$store.commit("setIngNames", ingNames);
+      this.$store.commit("setCurrentPriceIng", price);
     },
     dragenter(check) {
       this.checkDragEnter = check;

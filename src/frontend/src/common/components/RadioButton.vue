@@ -50,6 +50,7 @@ export default {
   methods: {
     getValueRadio() {
       this.$emit("getValueRadio", this.price ? this.price : '', this.multiplier ? this.multiplier : '', this.value ? this.value : '');
+      
     },
   },
   mounted() {
